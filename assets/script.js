@@ -17,7 +17,7 @@ const slides = [
 	}
 ]
 
-// Slideshow: PREVIEW
+// PREVIEW
 const banner = document.getElementById("banner");
 let view = 0;
 
@@ -29,7 +29,41 @@ const bannerTitle = document.createElement("p");
 bannerTitle.innerHTML = slides[view].tagLine;
 banner.appendChild(bannerTitle);
 
-// Slideshow: DOTS
+// ARROWS
+
+const arrowLeft = document.querySelector(".arrow_left");
+	arrowLeft.addEventListener("click", () =>{
+		directionClick("left");
+});
+const arrowRight = document.querySelector(".arrow_right");
+	arrowRight.addEventListener("click", () =>{
+		directionClick("right");
+});
+
+
+function directionClick(arrow){
+	selectedDot.classList.remove("dot_selected");
+	switch (arrow) {
+		case "left":
+				view--;
+				if (view < 0){
+						view = slides.length -1;
+				}
+			break;
+		case "right":
+				view++;
+				if (view > slides.length - 1){
+					view = 0;	
+				}
+			break;
+	}
+	slide.src = `assets/images/slideshow/${slides[view].image}`;
+	bannerTitle.innerHTML = slides[view].tagLine;
+	selectedDot = document.querySelector(`.dot${view}`);
+	selectedDot.classList.add("dot_selected"); 
+
+}
+// DOTS
 const bulletPoints = document.querySelector(".dots");
 
 for (let i = 0; i < slides.length; i++){
@@ -43,16 +77,19 @@ for (let i = 0; i < slides.length; i++){
 let selectedDot = document.querySelector(`.dot${view}`);
 	selectedDot.classList.add("dot_selected");
 
-// Slideshow: ARROWS
+// DOTS click
 
-const arrowLeft = document.querySelector(".arrow_left");
-	arrowLeft.addEventListener("click", () =>{
-		console.log("J'ai cliqué à gauche")
-});
-const arrowRight = document.querySelector(".arrow_right");
-	arrowRight.addEventListener("click", () =>{
-		console.log("J'ai cliqué à droite")
-});
+function dotClick (select) {
+	selectedDot.classList.remove(`dot_selected`);
+	slide.src = `assets/images/slideshow/${slides[select].image}`;
+	bannerTitle.innerHTML = slides[select].tagLine;
+	selectedDot = document.querySelector(`.dot${select}`);
+	selectedDot.classList.add("dot_selected"); 
+}
 
-
-// Slideshow: DOTS click - BONUS
+for (let i = 0; i < slides.length; i++){
+	let dot = document.querySelector(`.dot${i}`)
+	dot.addEventListener("click", () =>{
+	dotClick(i);
+	});
+}
