@@ -22,6 +22,11 @@ const numberOfImages = slides.length;
 const bannerElement = document.querySelector("#banner");
 const arrowRight = document.querySelector("#banner .arrow_right");
 const arrowLeft = document.querySelector("#banner .arrow_left");
+let imageNumber = 0;
+
+// Bonus : slider
+let sliderInterval, sliderIntervalAnim;
+const intervalMs = 5000;
 
 // HTML Elements inside banner
 const createElements = (numberOfImages) =>{
@@ -33,8 +38,7 @@ const createElements = (numberOfImages) =>{
 }
 
 // Display img banner, text, dot
-const displayBanner = (imageNumber=0) =>{
-
+const displayBanner = (imageNumber) =>{
 	if (bannerElement.firstElementChild.classList.contains('banner-img')){
 		bannerElement.firstElementChild.src = `./assets/images/slideshow/${slides[imageNumber].image}`;
 	} else {
@@ -52,9 +56,13 @@ const displayBanner = (imageNumber=0) =>{
 		if(index === imageNumber){
 			element.classList.add("dot_selected");
 		} else {
-			element.classList.remove("dot_selected")
+			element.classList.remove("dot_selected");
 		}
 	});
+
+	// anim
+	bannerElement.firstElementChild.style.animation = "1s fadeIn forwards ";
+	bannerElement.querySelector('p').style.animation = "1s animTagline forwards";
 
 	return imageNumber;
 }
@@ -62,13 +70,12 @@ const displayBanner = (imageNumber=0) =>{
 // Click on dots
 const dotsHandler = () => {
 	const dotsElements = document.querySelectorAll("#banner .dot");
-
 	for (let dot of dotsElements){
 		dot.style.cursor = 'pointer';
 		dot.addEventListener('click', (e) => {
 			const thisDot = e.target;
-			const idDot = Number(thisDot.dataset.id);
-			displayBanner(idDot)
+			imageNumber = Number(thisDot.dataset.id);
+			displayBanner(imageNumber)
 		})
 	}
 }
@@ -76,7 +83,7 @@ const dotsHandler = () => {
 ///
 createElements (numberOfImages);
 ///
-let imageNumber = displayBanner();
+displayBanner(imageNumber);
 ///
 dotsHandler();
 ///
@@ -97,7 +104,33 @@ arrowRight.addEventListener('click', (e) =>{
 	}
 	// display banner
 	bannerHandler(imageNumber);
+	
 });
-const bannerHandler = (imageNumber)=>{
-	displayBanner(imageNumber);
+
+// Slider
+const bannerHandler = (imageNumber) => {
+	// stop sliderInterval
+	clearInterval(sliderInterval);
+	clearInterval(sliderIntervalAnim)
+	// next or previous img
+	displayBanner(imageNumber);		
+	// start sliderInterval
+	sliderHandler(imageNumber);		
 }
+
+const sliderHandler = (imageNumber) => {		
+	sliderInterval = setInterval(() => {
+		imageNumber++;
+		if (imageNumber >= numberOfImages) {
+			imageNumber = 0;
+		}			
+		displayBanner(imageNumber);
+	}, intervalMs)
+
+	// reset anim
+	sliderIntervalAnim = setInterval(()=> {
+		bannerElement.firstElementChild.style.animation = "";
+		bannerElement.querySelector('p').style.animation = "";
+	}, 4000)
+}
+sliderHandler(imageNumber)
