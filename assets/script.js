@@ -26,7 +26,7 @@ let imageNumber = 0;
 
 // Bonus : slider
 let sliderInterval, sliderIntervalAnim;
-const intervalMs = 5000;
+const intervalMs = 3000;
 
 // HTML Elements inside banner
 const createElements = (numberOfImages) =>{
